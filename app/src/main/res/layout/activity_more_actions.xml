@@ -29,25 +29,35 @@
                 android:id="@+id/iae_btn"
                 android:layout_height="wrap_content"/>
 
-<!--            <Button-->
-<!--                android:layout_width="0dp"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/iae_btn"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                android:layout_margin="15dp"-->
-<!--                android:text="User Invite"-->
-<!--                android:id="@+id/user_invite_btn"-->
-<!--                android:layout_height="wrap_content"/>-->
+            <Button
+                android:layout_width="0dp"
+                app:layout_constraintTop_toBottomOf="@id/iae_btn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="15dp"
+                android:text="User Invite"
+                android:id="@+id/user_invite_btn"
+                android:layout_height="wrap_content"/>
 
-<!--            <Button-->
-<!--                android:layout_width="0dp"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/user_invite_btn"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                android:layout_margin="15dp"-->
-<!--                android:text="Test Push Notifications"-->
-<!--                android:id="@+id/test_push_notifications"-->
-<!--                android:layout_height="wrap_content"/>-->
+            <Button
+                android:layout_width="0dp"
+                app:layout_constraintTop_toBottomOf="@id/user_invite_btn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="15dp"
+                android:text="Test Push Notifications"
+                android:id="@+id/test_push_notifications"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:layout_width="0dp"
+                app:layout_constraintTop_toBottomOf="@id/user_invite_btn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="15dp"
+                android:text="Device and User Identifiers"
+                android:id="@+id/identifiers"
+                android:layout_height="wrap_content"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

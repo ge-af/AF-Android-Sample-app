@@ -200,6 +200,10 @@ public class MainActivity extends Activity {
             AppsFlyerLib.getInstance().anonymizeUser(true);
         }
 
+        if(shouldUseWaitForCUID) {
+            AppsFlyerLib.getInstance().waitForCustomerUserId(true);
+        }
+
         AppsFlyerLib.getInstance().init(devKey, new AppsFlyerConversionListener() {
             @Override
             public void onConversionDataSuccess(Map<String, Object> map) { DemoUtils.getInstance().handleGcdData(MainActivity.this, map); }
