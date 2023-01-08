@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
     private long udlTimeout = 3;
     private boolean shouldUseWaitForCUID = false;
     private boolean shouldUseAnonymizeUser = false;
-    private String cuid = "default_cuid";
+    private String cuid = "";
     private boolean isInit = false;
     private boolean isStart = false;
     private boolean isStop = false;
