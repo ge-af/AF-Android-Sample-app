@@ -30,13 +30,13 @@ public class MainActivity extends Activity {
     private boolean shouldInitWithGCD = false;
     private boolean shouldUseApplicationContext = false;
     private boolean useUDL = true;
-    private long udlTimeout = 3;
     private boolean shouldUseWaitForCUID = false;
     private boolean shouldUseAnonymizeUser = false;
-    private String cuid = "";
-    private boolean isInit = false;
     private boolean isStart = false;
     private boolean isStop = false;
+    private boolean isInit = false;
+    private String cuid = null;
+    private long udlTimeout = 3;
     private TextView status;
 
     @Override
@@ -77,9 +77,7 @@ public class MainActivity extends Activity {
         });
 
         findViewById(R.id.init_sdk_btn).setOnClickListener(v -> { initSDK(); });
-
         findViewById(R.id.start_sdk_btn).setOnClickListener(v -> startSDK());
-
         findViewById(R.id.stop_sdk_btn).setOnClickListener(v -> stopSDK());
     }
 
