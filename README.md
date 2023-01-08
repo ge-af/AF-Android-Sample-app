@@ -10,6 +10,9 @@ Sample app packageName is **com.appsflyer.sdk.support.demo**.
 
 # Basic Integration instructions
 
+
+![Screen Shot 2023-01-08 at 17 47 22](https://user-images.githubusercontent.com/87754256/211205971-7aed33ba-9663-4b93-afb8-06870564d8bd.png)
+
 All configurations in the Edit texts fields and in the Checkboxes are stored in Shared Preferences and will be saved for later app launches.
 
 When the application is first being launched, the SDK won't start yet as it is in **deferred mode** *by default*.
@@ -19,6 +22,8 @@ The default state is to use deferred start and use UDL instead of GCD for Deferr
 
 
 # In-App Events Testing
+
+![Screen Shot 2023-01-08 at 17 47 53](https://user-images.githubusercontent.com/87754256/211205960-fcb40b52-c27b-4234-a5d5-cad1e3fcca00.png)
 
 You can choose between 3 different scenarios:
 1. **Regular** hard-coded In-App Event
