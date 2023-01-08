@@ -22,6 +22,7 @@ import com.appsflyer.deeplink.DeepLinkResult;
 
 import java.util.Map;
 
+//Main Entry for this sample app
 public class MainActivity extends Activity {
 
     private final String devKey = "mkYxfjQyGL4iDYUSxkHua5";
