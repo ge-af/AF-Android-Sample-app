@@ -115,6 +115,18 @@
                     android:layout_height="wrap_content"
                     android:hint="CUID"/>
 
+                <EditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/host_et"
+                    android:layout_height="wrap_content"
+                    android:hint="Host"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/host_prefix_et"
+                    android:layout_height="wrap_content"
+                    android:hint="Host Prefix"/>
+
             </LinearLayout>
 
             <Button

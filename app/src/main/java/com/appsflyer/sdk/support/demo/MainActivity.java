@@ -1,14 +1,12 @@
 package com.appsflyer.sdk.support.demo;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -17,8 +15,6 @@ import android.widget.Toast;
 
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
-import com.appsflyer.deeplink.DeepLinkListener;
-import com.appsflyer.deeplink.DeepLinkResult;
 
 import java.util.Map;
 
@@ -27,36 +23,35 @@ public class MainActivity extends Activity {
 
     private final String devKey = "mkYxfjQyGL4iDYUSxkHua5";
     private boolean shouldUseDeferredStart = true;
-    private boolean shouldInitWithGCD = false;
     private boolean shouldUseApplicationContext = false;
-    private boolean useUDL = true;
+    private boolean shouldUseUDL = true;
     private boolean shouldUseWaitForCUID = false;
     private boolean shouldUseAnonymizeUser = false;
     private boolean isStart = false;
     private boolean isStop = false;
     private boolean isInit = false;
     private String cuid = null;
+    private String host = null;
+    private String hostPrefix = null;
     private long udlTimeout = 3;
     private TextView status;
+    private CheckBox deferredCb, appContextCb, udlCb, waitForCuidCb, anonymizeCb;
+    private EditText hostEt, hostPrefixEt,udlTimeoutEt, cuidEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        status = findViewById(R.id.sdk_status);
 
-        AppsFlyerLib.getInstance().setDebugLog(true);
-        updateSDKStatus();
-        initOptions();
 
-        if(!shouldUseDeferredStart) { // Take from Prefs, default is deferred start.
+        AppsFlyerLib.getInstance().setDebugLog(true);  //Setting debug logs is mandatory for the Demo app
+        updateSDKStatus(); //Initial SDK status request
+        initViews(); //Init views and logic
+        initOptions(); //make sure all the configurations are fetched from persistent storage
+
+        if(!shouldUseDeferredStart) {
             initSDK();
-            if(useUDL) {
-                AppsFlyerLib.getInstance().subscribeForDeepLink(deepLinkResult -> DemoUtils.getInstance().handleUDLResponse(MainActivity.this, deepLinkResult), udlTimeout * 1000);
-            }
             startSDK();
-        } else {
-           DemoUtils.getInstance().showToastMessage(this,"SDK wasn't start, set to use deferred start");
         }
 
         findViewById(R.id.more_btn).setOnClickListener(v -> {
@@ -73,22 +68,62 @@ public class MainActivity extends Activity {
                     }
                 }
             });
-
         });
 
-        findViewById(R.id.init_sdk_btn).setOnClickListener(v -> { initSDK(); });
+
+    }
+
+    private void initViews() {
+        deferredCb = findViewById(R.id.deferred_start_toggle);
+        appContextCb = findViewById(R.id.app_context_toggle);
+        udlCb = findViewById(R.id.use_udl_toggle);
+        waitForCuidCb = findViewById(R.id.wait_for_cuid_toggle);
+        anonymizeCb = findViewById(R.id.anonymize_user_toggle);
+
+        findViewById(R.id.init_sdk_btn).setOnClickListener(v ->  initSDK());
         findViewById(R.id.start_sdk_btn).setOnClickListener(v -> startSDK());
         findViewById(R.id.stop_sdk_btn).setOnClickListener(v -> stopSDK());
-    }
 
-    private void stopSDK() {
-        isStop = true;
-        updateSDKStatus();
-        AppsFlyerLib.getInstance().stop(true, this);
-    }
+        hostEt = findViewById(R.id.host_et);
+        hostEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                String hostStr = s.toString();
+                if(!hostStr.isEmpty()) {
+                    host = s.toString();
+                } else {
+                    host = null;
+                }
 
-    private void initOptions() {
-        EditText cuidEt = findViewById(R.id.cuid_et);
+                DemoUtils.getInstance().saveToSP(MainActivity.this, "host", host);
+            }
+        });
+
+        hostPrefixEt = findViewById(R.id.host_prefix_et);
+        hostPrefixEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                String hostPrefixStr = s.toString();
+                if(!hostPrefixStr.isEmpty()) {
+                    hostPrefix = s.toString();
+                } else {
+                    hostPrefix = null;
+                }
+
+                DemoUtils.getInstance().saveToSP(MainActivity.this, "hostPrefix", hostPrefix);
+            }
+        });
+
+
+        cuidEt = findViewById(R.id.cuid_et);
         cuidEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -99,12 +134,15 @@ public class MainActivity extends Activity {
                 String cuidStr = s.toString();
                 if(!cuidStr.isEmpty()) {
                     cuid = s.toString();
-                    DemoUtils.getInstance().saveToSP(MainActivity.this, "cuid", cuid);
+                } else {
+                    cuid = "";
+
                 }
+                DemoUtils.getInstance().saveToSP(MainActivity.this, "cuid", cuid);
             }
         });
 
-        EditText udlTimeoutEt = findViewById(R.id.udl_timeout_et);
+        udlTimeoutEt = findViewById(R.id.udl_timeout_et);
         udlTimeoutEt.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         udlTimeoutEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -123,78 +161,90 @@ public class MainActivity extends Activity {
             }
         });
 
-        CheckBox deferred = findViewById(R.id.deferred_start_toggle);
-        CheckBox appContext = findViewById(R.id.app_context_toggle);
-        CheckBox udl = findViewById(R.id.use_udl_toggle);
-        CheckBox waitForCUID = findViewById(R.id.wait_for_cuid_toggle);
-        CheckBox anonymize = findViewById(R.id.anonymize_user_toggle);
 
-        deferred.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        deferredCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                shouldUseDeferredStart = isChecked;
                 DemoUtils.getInstance().saveToSP(MainActivity.this, "is_deferred", isChecked);
             }
         });
 
-        appContext.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        appContextCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                shouldUseApplicationContext = isChecked;
                 DemoUtils.getInstance().saveToSP(MainActivity.this, "appContext", isChecked);
             }
         });
 
-        udl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        udlCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                shouldUseUDL = isChecked;
                 DemoUtils.getInstance().saveToSP(MainActivity.this, "is_udl", isChecked);
             }
         });
 
-        waitForCUID.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        waitForCuidCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                shouldUseWaitForCUID = isChecked;
                 DemoUtils.getInstance().saveToSP(MainActivity.this, "waitForCUID", isChecked);
             }
         });
 
-        anonymize.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        anonymizeCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 DemoUtils.getInstance().saveToSP(MainActivity.this, "anonymize", isChecked);
             }
         });
 
+    }
 
+    private void stopSDK() {
+        isStop = true;
+        updateSDKStatus();
+        AppsFlyerLib.getInstance().stop(true, this);
+    }
 
-        deferred.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "is_deferred"));
-        appContext.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "appContext"));
-        udl.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "is_udl"));
-        waitForCUID.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "waitForCUID"));
-        anonymize.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "anonymize"));
+    private void initOptions() {
+
+        deferredCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "is_deferred"));
+        appContextCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "appContext"));
+        udlCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "is_udl"));
+        waitForCuidCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "waitForCUID"));
+        anonymizeCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "anonymize"));
+
         udlTimeoutEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "udlTimeout"));
         cuidEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "cuid"));
         udlTimeout = udlTimeoutEt.getText().toString().equals("") ? 3 : Long.parseLong(udlTimeoutEt.getText().toString());
         DemoUtils.getInstance().saveToSP(MainActivity.this, "udl", udlTimeout);
         cuid = cuidEt.getText().toString();
         DemoUtils.getInstance().saveToSP(MainActivity.this, "udl", cuid);
+        hostEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "host"));
+        host = hostEt.getText().toString().equals("") ? null : hostEt.getText().toString();
+        hostPrefixEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "hostPrefix"));
+        hostPrefix = hostPrefixEt.getText().toString().equals("") ? null : hostPrefixEt.getText().toString();
 
-        shouldUseDeferredStart = deferred.isChecked();
-        shouldUseApplicationContext = appContext.isChecked();
-        useUDL = udl.isChecked();
-        shouldUseWaitForCUID = waitForCUID.isChecked();
-        shouldUseAnonymizeUser = anonymize.isChecked();
+        shouldUseDeferredStart = deferredCb.isChecked();
+        shouldUseApplicationContext = appContextCb.isChecked();
+        shouldUseUDL = udlCb.isChecked();
+        shouldUseWaitForCUID = waitForCuidCb.isChecked();
+        shouldUseAnonymizeUser = anonymizeCb.isChecked();
     }
 
     private void initSDK() {
 
         isInit = true;
         updateSDKStatus();
-        if(cuid != null && !cuid.isEmpty()) {
-            AppsFlyerLib.getInstance().setCustomerUserId(cuid);
-        }
-        if(useUDL) {
-            AppsFlyerLib.getInstance().subscribeForDeepLink(deepLinkResult -> DemoUtils.getInstance().handleUDLResponse(MainActivity.this, deepLinkResult), udlTimeout * 1000);
-        }
+
+        setCuidIfNeeded();
+        setHostIfNeeded();
+
+        setUDLIfNeeded();
 
         if(shouldUseAnonymizeUser) {
             AppsFlyerLib.getInstance().anonymizeUser(true);
@@ -204,6 +254,10 @@ public class MainActivity extends Activity {
             AppsFlyerLib.getInstance().waitForCustomerUserId(true);
         }
 
+        Context ctx = this;
+        if(shouldUseApplicationContext) {
+            ctx = ctx.getApplicationContext();
+        }
         AppsFlyerLib.getInstance().init(devKey, new AppsFlyerConversionListener() {
             @Override
             public void onConversionDataSuccess(Map<String, Object> map) { DemoUtils.getInstance().handleGcdData(MainActivity.this, map); }
@@ -213,20 +267,45 @@ public class MainActivity extends Activity {
             public void onAppOpenAttribution(Map<String, String> map) { DemoUtils.getInstance().handleOAOA(MainActivity.this, map); }
             @Override
             public void onAttributionFailure(String s) { DemoUtils.getInstance().handleOAOAFailure(MainActivity.this, s);}
-        }, this);
+        }, ctx);
 
+    }
+
+    private void setUDLIfNeeded() {
+        if(shouldUseUDL) {
+            AppsFlyerLib.getInstance().subscribeForDeepLink(deepLinkResult -> DemoUtils.getInstance().handleUDLResponse(MainActivity.this, deepLinkResult), udlTimeout * 1000);
+        }
+    }
+
+    private void setHostIfNeeded() {
+        if(host == null || host.isEmpty()) {
+            AppsFlyerLib.getInstance().setHost("", "appsflyer.com");
+        } else {
+            AppsFlyerLib.getInstance().setHost(hostPrefix, host);
+        }
     }
 
     private void startSDK() {
         AppsFlyerLib.getInstance().stop(false, this);
 
-        if(cuid != null && !cuid.isEmpty()) {
-            AppsFlyerLib.getInstance().setCustomerUserId(cuid);
-        }
+        setCuidIfNeeded();
+        setHostIfNeeded();
 
         if(shouldUseWaitForCUID) {
-            AppsFlyerLib.getInstance().setCustomerIdAndLogSession(cuid, this);
+            if(cuid == null || cuid.isEmpty()) {
+                DemoUtils.getInstance().showToastMessage(MainActivity.this, "SDK didn't start since CUID is not set, please set CUID");
+            } else {
+                isStart = true;
+                if(shouldUseApplicationContext) {
+                    AppsFlyerLib.getInstance().setCustomerIdAndLogSession(cuid, MainActivity.this.getApplicationContext());
+                } else {
+                    AppsFlyerLib.getInstance().setCustomerIdAndLogSession(cuid, MainActivity.this);
+                }
+
+            }
+
         } else {
+            isStart = true;
             if(shouldUseApplicationContext) {
                 AppsFlyerLib.getInstance().start(this.getApplicationContext());
             } else {
@@ -235,11 +314,23 @@ public class MainActivity extends Activity {
         }
 
         isStop = false;
-        isStart = true;
+
         updateSDKStatus();
     }
 
+    private void setCuidIfNeeded() {
+        if(!shouldUseWaitForCUID) {
+            if(cuid != null && !cuid.isEmpty()) {
+                AppsFlyerLib.getInstance().setCustomerUserId(cuid);
+            }
+        }
+
+    }
+
     private void updateSDKStatus() {
+
+        status = findViewById(R.id.sdk_status);
+
         String statusStr = "The SDK is ";
         if(isInit) {
             statusStr = statusStr + "initialized ";

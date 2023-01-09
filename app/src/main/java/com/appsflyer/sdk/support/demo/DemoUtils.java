@@ -41,12 +41,6 @@ public class DemoUtils {
 
                     saveToSP(ctx, "is_deferred", true);
                     saveToSP(ctx, "is_udl", true);
-                    saveToSP(ctx, "appContext", false);
-                    saveToSP(ctx, "waitForCUID", false);
-                    saveToSP(ctx, "anonymize", false);
-                    saveToSP(ctx, "udlTimeout", "");
-                    saveToSP(ctx, "cuid", "");
-
 
                     onOptionChangedListener.onReset(true);
                     //Remove all data from Prefs and reset checkbox values
