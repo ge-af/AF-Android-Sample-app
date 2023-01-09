@@ -11,7 +11,7 @@ Sample app packageName is **com.appsflyer.sdk.support.demo**.
 # Basic Integration instructions
 
 
-![Screen Shot 2023-01-08 at 17 47 22](https://user-images.githubusercontent.com/87754256/211205971-7aed33ba-9663-4b93-afb8-06870564d8bd.png)
+![Screen Shot 2023-01-09 at 11 49 21](https://user-images.githubusercontent.com/87754256/211280710-44d57be6-55bf-49a5-9697-8ca4a421d0f6.png)
 
 All configurations in the Edit texts fields and in the Checkboxes are stored in Shared Preferences and will be saved for later app launches.
 
