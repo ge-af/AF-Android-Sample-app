@@ -19,5 +19,10 @@ public class MoreActionActivity extends Activity {
             Intent intent = new Intent(MoreActionActivity.this, IAEActivity.class);
             startActivity(intent);
         });
+
+        findViewById(R.id.user_invite_btn).setOnClickListener(v -> {
+            Intent intent = new Intent(MoreActionActivity.this, UserInviteActivity.class);
+            startActivity(intent);
+        });
     }
 }

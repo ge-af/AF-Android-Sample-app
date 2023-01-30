@@ -31,12 +31,13 @@ public class MainActivity extends Activity {
     private boolean isStop = false;
     private boolean isInit = false;
     private String cuid = null;
+    private String appInviteId = null;
     private String host = null;
     private String hostPrefix = null;
     private long udlTimeout = 3;
     private TextView status;
     private CheckBox deferredCb, appContextCb, udlCb, waitForCuidCb, anonymizeCb;
-    private EditText hostEt, hostPrefixEt,udlTimeoutEt, cuidEt;
+    private EditText hostEt, hostPrefixEt,udlTimeoutEt, cuidEt ,appInviteOneLinkEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class MainActivity extends Activity {
 
 
         AppsFlyerLib.getInstance().setDebugLog(true);  //Setting debug logs is mandatory for the Demo app
+
+
         updateSDKStatus(); //Initial SDK status request
         initViews(); //Init views and logic
         initOptions(); //make sure all the configurations are fetched from persistent storage
@@ -142,6 +145,25 @@ public class MainActivity extends Activity {
             }
         });
 
+        appInviteOneLinkEt = findViewById(R.id.app_invite_onelink_id_timeout_et);
+        appInviteOneLinkEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                String appInviteIdStr = s.toString();
+                if(!appInviteIdStr.isEmpty()) {
+                    appInviteId = s.toString();
+                } else {
+                    appInviteId = "";
+
+                }
+                DemoUtils.getInstance().saveToSP(MainActivity.this, "appInviteOneLinkId", appInviteId);
+            }
+        });
+
         udlTimeoutEt = findViewById(R.id.udl_timeout_et);
         udlTimeoutEt.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
         udlTimeoutEt.addTextChangedListener(new TextWatcher() {
@@ -206,6 +228,7 @@ public class MainActivity extends Activity {
 
     private void stopSDK() {
         isStop = true;
+        isStart = false;
         updateSDKStatus();
         AppsFlyerLib.getInstance().stop(true, this);
     }
@@ -220,10 +243,12 @@ public class MainActivity extends Activity {
 
         udlTimeoutEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "udlTimeout"));
         cuidEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "cuid"));
+        appInviteOneLinkEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "appInviteOneLinkId"));
         udlTimeout = udlTimeoutEt.getText().toString().equals("") ? 3 : Long.parseLong(udlTimeoutEt.getText().toString());
         DemoUtils.getInstance().saveToSP(MainActivity.this, "udl", udlTimeout);
         cuid = cuidEt.getText().toString();
-        DemoUtils.getInstance().saveToSP(MainActivity.this, "udl", cuid);
+        appInviteId = appInviteOneLinkEt.getText().toString();
+        DemoUtils.getInstance().saveToSP(MainActivity.this, "cuid", cuid);
         hostEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "host"));
         host = hostEt.getText().toString().equals("") ? null : hostEt.getText().toString();
         hostPrefixEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "hostPrefix"));
@@ -238,6 +263,11 @@ public class MainActivity extends Activity {
 
     private void initSDK() {
 
+        if(isInit) {
+            DemoUtils.getInstance().showToastMessage(this, "SDK already initialized..");
+            return;
+        }
+
         isInit = true;
         updateSDKStatus();
 
@@ -245,6 +275,10 @@ public class MainActivity extends Activity {
         setHostIfNeeded();
 
         setUDLIfNeeded();
+
+        if(appInviteId != null && !appInviteId.isEmpty()) {
+            AppsFlyerLib.getInstance().setAppInviteOneLink(appInviteId);
+        }
 
         if(shouldUseAnonymizeUser) {
             AppsFlyerLib.getInstance().anonymizeUser(true);
@@ -286,6 +320,12 @@ public class MainActivity extends Activity {
     }
 
     private void startSDK() {
+
+        if(isStart) {
+            DemoUtils.getInstance().showToastMessage(this, "SDK already started..");
+            return;
+        }
+
         AppsFlyerLib.getInstance().stop(false, this);
 
         setCuidIfNeeded();

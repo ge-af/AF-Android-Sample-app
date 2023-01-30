@@ -1,6 +1,361 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:drawableRight="@android:drawable/ic_menu_share"
+        android:layout_margin="15dp"
+        android:paddingRight="30dp"
+        android:id="@+id/output_tv"
+        android:background="@drawable/tv_background"
+        android:hint="Waiting for an action.."
+        android:padding="10dp"
+        android:maxLines="10"
+        android:layout_height="wrap_content"/>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="15dp"
+                android:id="@+id/option_layout"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/output_tv"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="pid"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/pid_et"
+                        android:hint="override af_app_invites"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="channel"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/channel_et"
+                        android:hint=""
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="campaign"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/campaign_et"
+                        android:hint=""
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_value"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/deep_link_value_et"
+                        android:hint=""
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub1"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:hint=""
+                        android:id="@+id/deep_link_sub1_et"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub2"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:hint=""
+                        android:id="@+id/deep_link_sub2_et"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub3"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/deep_link_sub3_et"
+                        android:hint=""
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub4"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:hint=""
+                        android:id="@+id/deep_link_sub4_et"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub5"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:hint=""
+                        android:id="@+id/deep_link_sub5_et"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub6"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/deep_link_sub6_et"
+                        android:hint=""
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub7"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/deep_link_sub7_et"
+                        android:hint=""
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub8"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/deep_link_sub8_et"
+                        android:hint=""
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub9"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:hint=""
+                        android:id="@+id/deep_link_sub9_et"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="2"
+                        android:hint="deep_link_sub10"
+                        android:layout_height="wrap_content"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:hint=""
+                        android:id="@+id/deep_link_sub10_et"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <Button
+                android:layout_width="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/option_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/generate_user_invite_nbtn"
+                android:layout_margin="15dp"
+                android:text="Generate Link"
+                android:layout_height="wrap_content"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

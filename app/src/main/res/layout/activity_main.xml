@@ -105,6 +105,12 @@
 
                 <EditText
                     android:layout_width="match_parent"
+                    android:id="@+id/app_invite_onelink_id_timeout_et"
+                    android:layout_height="wrap_content"
+                    android:hint="App Invite OneLink ID"/>
+
+                <EditText
+                    android:layout_width="match_parent"
                     android:id="@+id/udl_timeout_et"
                     android:layout_height="wrap_content"
                     android:hint="UDL Timeout (In Seconds)"/>
