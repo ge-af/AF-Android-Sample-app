@@ -32,7 +32,7 @@ You can choose between 3 different scenarios:
 
 # User Invite Testing
 
-![](../../Desktop/Screenshot 2023-01-30 at 13.36.18.png)
+![Screenshot 2023-01-30 at 13 36 18](../../Desktop/Screenshot 2023-01-30 at 13.36.18.png)
 
 You can now create generated short link via the User Invite feature. Make sure to input the correct App Invite OneLink ID in the main screen before starting the SDK and you can override these fields:
 1. Media Source (pid, default is af_app_invites)
