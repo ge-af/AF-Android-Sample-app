@@ -32,6 +32,8 @@ You can choose between 3 different scenarios:
 
 # User Invite Testing
 
+![Screenshot 2023-01-30 at 13 36 18](https://user-images.githubusercontent.com/87754256/215467023-51a9452f-d2c7-4b7c-911c-6281661ded1c.png)
+
 You can now create generated short link via the User Invite feature. Make sure to input the correct App Invite OneLink ID in the main screen before starting the SDK and you can override these fields:
 1. Media Source (pid, default is af_app_invites)
 2. Channel
