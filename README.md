@@ -3,7 +3,7 @@ Sample app to demonstrate the features in the AppsFlyer Android SDK.
 
 This app is updated according to latest date of 8/1/2023.
 
-Android SDK usage is 6.+ (Currently 6.9.4)
+Android SDK usage is 6.+ (Currently 6.10.0)
 
 Sample app packageName is **com.appsflyer.sdk.support.demo**.
 
