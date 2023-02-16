@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DeviceDataActivity">
+
+    <ScrollView
+        android:layout_width="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_margin="15dp"
+                android:text="GAID"
+                android:textSize="22sp"
+                android:id="@+id/gaid_title"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/gaid_title"
+                android:padding="10dp"
+                android:drawableRight="@android:drawable/ic_menu_share"
+                android:background="@drawable/tv_background"
+                android:textSize="16sp"
+                android:hint="Fetching GAID..."
+                android:id="@+id/gaid_value_tv"
+                android:layout_margin="15dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/imei_title"
+                android:layout_margin="15dp"
+                android:text="IMEI"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/gaid_value_tv"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:background="@drawable/tv_background"
+                app:layout_constraintTop_toBottomOf="@id/imei_title"
+                android:hint="Fetching IMEI..."
+                android:drawableRight="@android:drawable/ic_menu_share"
+                android:id="@+id/imei_value_tv"
+                android:layout_margin="15dp"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/android_id_title"
+                android:layout_margin="15dp"
+                android:text="Android ID"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/imei_value_tv"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="10dp"
+                android:drawableRight="@android:drawable/ic_menu_share"
+                android:textSize="16sp"
+                android:background="@drawable/tv_background"
+                app:layout_constraintTop_toBottomOf="@id/android_id_title"
+                android:hint="Fetching Android ID..."
+                android:id="@+id/android_id_value_tv"
+                android:layout_margin="15dp"
+                android:layout_height="wrap_content"/>
+
+
+            <CheckBox
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="15dp"
+                android:id="@+id/disable_identifiers_btn"
+                android:text="Disable Advertising Identifiers"
+                app:layout_constraintTop_toBottomOf="@+id/android_id_value_tv"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="10dp"
+                android:textSize="16sp"
+
+                app:layout_constraintTop_toBottomOf="@id/disable_identifiers_btn"
+                android:hint="Disable Advertising Identifiers: "
+                android:id="@+id/disable_identifier_bool_tv"
+                android:layout_margin="15dp"
+                android:layout_height="wrap_content"/>
+
+            <CheckBox
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="15dp"
+                android:id="@+id/anonymize_user_id_btn"
+                android:text="Anonymize User"
+                app:layout_constraintTop_toBottomOf="@+id/disable_identifier_bool_tv"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="10dp"
+                android:textSize="16sp"
+
+                app:layout_constraintTop_toBottomOf="@id/anonymize_user_id_btn"
+                android:hint="Anonymize User: "
+                android:id="@+id/anonymize_bool_tv"
+                android:layout_margin="15dp"
+                android:layout_height="wrap_content"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

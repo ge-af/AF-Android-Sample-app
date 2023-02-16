@@ -24,5 +24,10 @@ public class MoreActionActivity extends Activity {
             Intent intent = new Intent(MoreActionActivity.this, UserInviteActivity.class);
             startActivity(intent);
         });
+
+        findViewById(R.id.identifiers).setOnClickListener( v -> {
+            Intent intent = new Intent(MoreActionActivity.this, DeviceDataActivity.class);
+            startActivity(intent);
+        });
     }
 }

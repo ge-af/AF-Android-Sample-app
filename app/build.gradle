@@ -1,18 +1,19 @@
 plugins {
     id 'com.android.application'
+    id "com.google.gms.google-services"
 }
 
 android {
     namespace 'com.appsflyer.sdk.support.demo'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.appsflyer.sdk.support.demo"
         minSdk 19
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,4 +40,8 @@ dependencies {
     implementation 'com.appsflyer:af-android-sdk:6.+'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation "com.android.installreferrer:installreferrer:2.2"
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    implementation platform('com.google.firebase:firebase-bom:31.2.1')
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation "androidx.multidex:multidex:2.0.1"
 }

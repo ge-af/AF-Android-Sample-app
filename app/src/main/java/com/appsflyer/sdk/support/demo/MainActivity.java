@@ -1,50 +1,70 @@
 package com.appsflyer.sdk.support.demo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Map;
 
 //Main Entry for this sample app
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
-    private final String devKey = "mkYxfjQyGL4iDYUSxkHua5";
+    public static final String devKey = "mkYxfjQyGL4iDYUSxkHua5";
     private boolean shouldUseDeferredStart = true;
     private boolean shouldUseApplicationContext = false;
     private boolean shouldUseUDL = true;
     private boolean shouldUseWaitForCUID = false;
-    private boolean shouldUseAnonymizeUser = false;
     private boolean isStart = false;
     private boolean isStop = false;
-    private boolean isInit = false;
+    public static boolean isInit = false;
     private String cuid = null;
     private String appInviteId = null;
     private String host = null;
     private String hostPrefix = null;
     private long udlTimeout = 3;
     private TextView status;
-    private CheckBox deferredCb, appContextCb, udlCb, waitForCuidCb, anonymizeCb;
+    private CheckBox deferredCb, appContextCb, udlCb, waitForCuidCb;
     private EditText hostEt, hostPrefixEt,udlTimeoutEt, cuidEt ,appInviteOneLinkEt;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        requestPushPermission();
 
+        AppsFlyerLib.getInstance().addPushNotificationDeepLinkPath("link");
         AppsFlyerLib.getInstance().setDebugLog(true);  //Setting debug logs is mandatory for the Demo app
 
 
@@ -76,14 +96,47 @@ public class MainActivity extends Activity {
 
     }
 
+    private void requestPushPermission() {
+
+            // This is only necessary for API level >= 33 (TIRAMISU)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    // FCM SDK (and your app) can post notifications.
+                } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                    // //display an educational UI explaining to the user the features that will be enabled
+                    //       by them granting the POST_NOTIFICATION permission. This UI should provide the user
+                    //       "OK" and "No thanks" buttons. If the user selects "OK," directly request the permission.
+                    //       If the user selects "No thanks," allow the user to continue without notifications.
+                } else {
+                    // Directly ask for the permission
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                }
+            }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        updateSDKStatus();
+    }
+
     private void initViews() {
         deferredCb = findViewById(R.id.deferred_start_toggle);
         appContextCb = findViewById(R.id.app_context_toggle);
         udlCb = findViewById(R.id.use_udl_toggle);
         waitForCuidCb = findViewById(R.id.wait_for_cuid_toggle);
-        anonymizeCb = findViewById(R.id.anonymize_user_toggle);
 
-        findViewById(R.id.init_sdk_btn).setOnClickListener(v ->  initSDK());
+        findViewById(R.id.init_sdk_btn).setOnClickListener(v -> {
+                    if (isInit) {
+                        DemoUtils.getInstance().showToastMessage(this, "SDK already initialized..");
+                    } else {
+                        initSDK();
+                    }
+                });
+
         findViewById(R.id.start_sdk_btn).setOnClickListener(v -> startSDK());
         findViewById(R.id.stop_sdk_btn).setOnClickListener(v -> stopSDK());
 
@@ -216,14 +269,6 @@ public class MainActivity extends Activity {
                 DemoUtils.getInstance().saveToSP(MainActivity.this, "waitForCUID", isChecked);
             }
         });
-
-        anonymizeCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DemoUtils.getInstance().saveToSP(MainActivity.this, "anonymize", isChecked);
-            }
-        });
-
     }
 
     private void stopSDK() {
@@ -239,8 +284,6 @@ public class MainActivity extends Activity {
         appContextCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "appContext"));
         udlCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "is_udl"));
         waitForCuidCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "waitForCUID"));
-        anonymizeCb.setChecked(DemoUtils.getInstance().getBooleanFromSP(MainActivity.this, "anonymize"));
-
         udlTimeoutEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "udlTimeout"));
         cuidEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "cuid"));
         appInviteOneLinkEt.setText(DemoUtils.getInstance().getStringFromSP(MainActivity.this, "appInviteOneLinkId"));
@@ -258,15 +301,9 @@ public class MainActivity extends Activity {
         shouldUseApplicationContext = appContextCb.isChecked();
         shouldUseUDL = udlCb.isChecked();
         shouldUseWaitForCUID = waitForCuidCb.isChecked();
-        shouldUseAnonymizeUser = anonymizeCb.isChecked();
     }
 
     private void initSDK() {
-
-        if(isInit) {
-            DemoUtils.getInstance().showToastMessage(this, "SDK already initialized..");
-            return;
-        }
 
         isInit = true;
         updateSDKStatus();
@@ -277,11 +314,7 @@ public class MainActivity extends Activity {
         setUDLIfNeeded();
 
         if(appInviteId != null && !appInviteId.isEmpty()) {
-            AppsFlyerLib.getInstance().setAppInviteOneLink(appInviteId);
-        }
-
-        if(shouldUseAnonymizeUser) {
-            AppsFlyerLib.getInstance().anonymizeUser(true);
+            AppsFlyerLib.getInstance().setAppInviteOneLink(appInviteId); //m8ho
         }
 
         if(shouldUseWaitForCUID) {
@@ -390,4 +423,13 @@ public class MainActivity extends Activity {
 
         status.setText(statusStr);
     }
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // FCM SDK (and your app) can post notifications.
+                } else {
+
+                }
+            });
 }

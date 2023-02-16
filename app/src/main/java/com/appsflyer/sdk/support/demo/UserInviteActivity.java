@@ -56,17 +56,17 @@ public class UserInviteActivity extends Activity {
 
 
     private void generate() {
-        LinkGenerator.ResponseListener listener = new LinkGenerator.ResponseListener() {
-            @Override
-            public void onResponse(String userInviteURL) {
-                output_tv.setText(userInviteURL);
-            }
-
-            @Override
-            public void onResponseError(String error) {
-                output_tv.setText(error);
-            }
-        };
+//        LinkGenerator.ResponseListener listener = new LinkGenerator.ResponseListener() {
+//            @Override
+//            public void onResponse(String userInviteURL) {
+//                output_tv.setText(userInviteURL);
+//            }
+//
+//            @Override
+//            public void onResponseError(String error) {
+//                output_tv.setText(error);
+//            }
+//        };
 
         LinkGenerator linkGenerator = ShareInviteHelper.generateInviteUrl(getApplicationContext());
 
@@ -129,7 +129,7 @@ public class UserInviteActivity extends Activity {
             linkGenerator.addParameter("deep_link_sub10", deep_link_sub10_et.getText().toString());
         }
 
-        linkGenerator.generateLink(this, listener);
+//        linkGenerator.generateLink(this, listener);
     }
 
 }

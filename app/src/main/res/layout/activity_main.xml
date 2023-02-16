@@ -101,6 +101,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:id="@+id/anonymize_user_toggle"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"/>
 
                 <EditText

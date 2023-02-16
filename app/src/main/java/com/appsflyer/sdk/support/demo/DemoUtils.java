@@ -2,6 +2,7 @@ package com.appsflyer.sdk.support.demo;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -67,7 +68,9 @@ public class DemoUtils {
     }
 
     public void handleUDLResponse(Context ctx, DeepLinkResult deepLinkResult) {
-
+        Intent intent = new Intent(ctx, DeepLinkActivity.class);
+        intent.putExtra("deep_link_intent_data", deepLinkResult.toString());
+        ctx.startActivity(intent);
     }
 
     public void handleOAOA(Context ctx, Map<String, String> map) {
